@@ -111,8 +111,8 @@ bot.hears('/about', ctx => {
 /weather - узнать погоду
 /city ГОРОД~КОДСТРАНЫ - сменить город(ex: /city Москва~RUS); код страны нужно писать в соответствии с ISO 3166
 /notifications - включить/выключить уведомления(каждый день в 12:00 вас будет уведомлять о погоде)
-Данные о погоде получены благодаря https://openweathermap.org`);
-}, Markup.inlineKeyboard([Markup.button.url("Source", "https://github.com/Yoursemmpai/weatherbot")]));
+Данные о погоде получены благодаря https://openweathermap.org`, Markup.inlineKeyboard([Markup.button.url("Source", "https://github.com/Yoursemmpai/weatherbot")]));
+});
 
 bot.hears(/^\/city .*$/i, ctx => {
 	let tempArr = ctx.message.text.substr(6).split("~");
