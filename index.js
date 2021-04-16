@@ -1,12 +1,12 @@
 const { Telegraf, Markup } = require('telegraf');
-const bot = new Telegraf('1773549216:AAGwqlKEt74PMyvjcWxvvSSUjtq5mcMRS7Y');
+const bot = new Telegraf('ВАШТОКЕН ТЕЛЕГРАМ БОТА');
 const rq = require('request-promise');
 const users = require('./users.json');
 const fs = require("fs");
 const CronJob = require("cron").CronJob;
-const appid = "b398f2e5bfceced85515c6989f7442f8";
+const appid = "ВАШТОКЕН openweathermap.org";
 const jobs = {};
-//this function starting the jobs after reload code
+//this function runs jobs after code reload 
 (function () {
 	for (let key in users) {
 		if (users[key].notifications.isOn) {
@@ -101,7 +101,7 @@ bot.hears('/start', ctx => {
 		return ctx.reply('Чтобы побольше узнать о боте пропишите /about');
 	} else {
 		users[ctx.from.id] = new User(ctx.from.id);
-		return ctx.reply("in next message type \"/city *your city*-*country code(use ISO 3166)*\"\nexample: /city Moscow-RUS\ndefault is Moscow/RUS");
+		return ctx.reply("В следующем сообщении пропишите /city ВАШГОРОД~КОДСТРАНЫ(в соответствии с ISO 3166) ex: /city Москва~RUS\nПо умолчанию ваш город - Москва");
 	}
 });
 
@@ -109,7 +109,7 @@ bot.hears('/about', ctx => {
 	ctx.reply(`Список команд:
 /about - это сообщение
 /weather - узнать погоду
-/city ГОРОД~КОДСТРАНЫ - сменить город(ex: /city Москва-RUS); код страны нужно писать в соответствии с ISO 3166
+/city ГОРОД~КОДСТРАНЫ - сменить город(ex: /city Москва~RUS); код страны нужно писать в соответствии с ISO 3166
 /notifications - включить/выключить уведомления(каждый день в 12:00 вас будет уведомлять о погоде)
 Данные о погоде получены благодаря https://openweathermap.org`);
 }, Markup.inlineKeyboard([Markup.button.url("Source", "https://github.com/Yoursemmpai/weatherbot")]));
@@ -145,9 +145,7 @@ bot.hears(/^\/city .*$/i, ctx => {
 bot.hears("/weather", ctx => {
 	sendWeather(users[ctx.from.id]).then(res => ctx.reply(res));
 });
-/*let job = new CronJob({cronTime: '50 25 21 * * *', onTick: () => {
-						sendWeather(users[ctx.from.id]).then(res => bot.telegram.sendMessage(ctx.from.id, res));
-				}, utcOffset: users[ctx.from.id].timezone / 3600});*/
+
 bot.hears("/notifications", ctx => {
 	ctx.reply(ntf(users[ctx.from.id]));
 });
