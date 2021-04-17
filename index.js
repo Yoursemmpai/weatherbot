@@ -4,7 +4,7 @@ const rq = require('request-promise');
 const users = require('./users.json');
 const fs = require("fs");
 const CronJob = require("cron").CronJob;
-const appid = "openweathermap.org token ";
+const appid = "openweathermap.org token";
 const jobs = {};
 //this function runs jobs after code reload 
 (function () {
@@ -63,18 +63,12 @@ function ntf(user) {
 		return 'notifications are off now'; 
 	}
 }
-/* TODO: fix bugs with timezones
 function getSun(unixTimeStamp, timezone) {
 	const date = new Date(unixTimeStamp * 1000);
 	let minutes = `0${date.getUTCMinutes()}`.slice(-2);
-	let hours = `0${date.setHours(date.getUTCHours() + timezone / 3600)}`.slice(-2);
+	let hours = `0${date.getUTCHours(date.setHours(date.getUTCHours() + timezone / 3600 + 3))}`.slice(-2);
 	return `${hours}:${minutes}`;
-\\\
-├Восход: ${getSun(res.sys.sunrise, res.timezone)}
-└Закат: ${getSun(res.sys.sunset, res.timezone)
-\\\
-
-}*/
+}
 
 async function sendWeather(user) {
 	let tempStr;
@@ -94,7 +88,9 @@ async function sendWeather(user) {
 ├Ветер:
 	     ├Скорость: ${res.wind.speed} м/с
 	     └Направление: ${windDirection(res.wind.deg)}
-└Облачность: ${res.clouds.all} %`;
+├Облачность: ${res.clouds.all} %
+├Восход: ${getSun(res.sys.sunrise, res.timezone)}
+└Закат: ${getSun(res.sys.sunset, res.timezone)}`;
 });
 
 	let promise = new Promise((resolve, reject) => {
