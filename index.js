@@ -1,10 +1,10 @@
 const { Telegraf, Markup } = require('telegraf');
-const bot = new Telegraf('ВАШТОКЕН ТЕЛЕГРАМ БОТА');
+const bot = new Telegraf('telegram token');
 const rq = require('request-promise');
 const users = require('./users.json');
 const fs = require("fs");
 const CronJob = require("cron").CronJob;
-const appid = "ВАШТОКЕН openweathermap.org";
+const appid = "openweathermap.org token ";
 const jobs = {};
 //this function runs jobs after code reload 
 (function () {
@@ -39,7 +39,7 @@ function windDirection(degrees) {
 	.set(270, "запад")
 	.set(315, "северо-запад");
 	for(let keys of directions.keys()) {
-		if(Math.abs(keys - degrees) < diff[0]) diff[1] = directions.get(keys);
+		if(Math.abs(keys - degrees) < diff[0]) {diff[1] = directions.get(keys); diff[0] = Math.abs(keys - degrees);}
 	}
 	return diff[1];
 }
@@ -63,10 +63,18 @@ function ntf(user) {
 		return 'notifications are off now'; 
 	}
 }
+/* TODO: fix bugs with timezones
 function getSun(unixTimeStamp, timezone) {
 	const date = new Date(unixTimeStamp * 1000);
-	return `${date.getUTCHours() + timezone / 3600}:${date.getUTCMinutes()}`;
-}
+	let minutes = `0${date.getUTCMinutes()}`.slice(-2);
+	let hours = `0${date.setHours(date.getUTCHours() + timezone / 3600)}`.slice(-2);
+	return `${hours}:${minutes}`;
+\\\
+├Восход: ${getSun(res.sys.sunrise, res.timezone)}
+└Закат: ${getSun(res.sys.sunset, res.timezone)
+\\\
+
+}*/
 
 async function sendWeather(user) {
 	let tempStr;
@@ -86,12 +94,11 @@ async function sendWeather(user) {
 ├Ветер:
 	     ├Скорость: ${res.wind.speed} м/с
 	     └Направление: ${windDirection(res.wind.deg)}
-├Облачность: ${res.clouds.all} %
-├Восход: ${getSun(res.sys.sunrise, res.timezone)}
-└Закат: ${getSun(res.sys.sunset, res.timezone)}`;
-	});
+└Облачность: ${res.clouds.all} %`;
+});
+
 	let promise = new Promise((resolve, reject) => {
-		setTimeout(() => resolve(tempStr), 1000);
+		setTimeout(() => resolve(tempStr), 2000);
 	});
 	return await promise;
 }
